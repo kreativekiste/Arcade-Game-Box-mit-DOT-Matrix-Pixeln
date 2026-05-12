@@ -63,9 +63,12 @@ void pj_updateGame(bool currentStart, bool lastStart) {
   if (millis() - pj_lastFrame < 20) return;
   pj_lastFrame = millis();
 
+  // --- JOYSTICK MIT DRIFT-FIX ---
   int joyX = analogRead(PIN_VRX);
-  if (abs(joyX - 512) < 30) joyX = 512;
-  float moveX = map(joyX, 1023, 0, -50, 50) / 100.0f;
+  float moveX = 0.0f;
+  if (abs(joyX - 512) >= 100) {
+    moveX = map(joyX, 1023, 0, -50, 50) / 100.0f;
+  }
   pj_px += moveX;
 
   if (pj_px < 0)       pj_px = MAX_X - 1;
